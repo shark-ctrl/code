@@ -11,7 +11,6 @@ var matchers = make(map[string]Matcher)
 
 // Run performs the search logic.
 func Run(searchTerm string) {
-	log.Printf("run函数运行了")
 	// Retrieve the list of feeds to search through.
 	//检索要搜索关键字的列表
 	feeds, err := RetrieveFeeds()
@@ -44,6 +43,7 @@ func Run(searchTerm string) {
 		// Launch the goroutine to perform the search.
 		//启动goroutine进行搜索工作
 		go func(matcher Matcher, feed *Feed) {
+			log.Println("启动了一个协程,feedUrl:", feed.URI)
 			Match(matcher, feed, searchTerm, results)
 			//完成后递减waitGroup
 			waitGroup.Done()

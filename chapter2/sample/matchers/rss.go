@@ -117,8 +117,11 @@ func (m rssMatcher) retrieve(feed *search.Feed) (*rssDocument, error) {
 		return nil, errors.New("No rss feed uri provided")
 	}
 
+	log.Println("发起http请求，URL请求地址:", feed.URI)
 	// Retrieve the rss feed document from the web.
 	resp, err := http.Get(feed.URI)
+	log.Println("http请求结束，URL请求地址:", feed.URI)
+
 	if err != nil {
 		return nil, err
 	}
