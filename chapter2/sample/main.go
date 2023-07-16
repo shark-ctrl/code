@@ -3,6 +3,9 @@ package main
 import (
 	"log"
 	"os"
+	//没有用到的包可以直接用下划线注释一下
+	_ "./matchers"
+	"./search"
 )
 
 /*
@@ -16,4 +19,6 @@ func init() {
 
 func main() {
 	log.Println("Hello Go in Action")
+	//爬取带有pulled1的内容
+	search.Run("pulled")
 }
