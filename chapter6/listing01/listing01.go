@@ -30,6 +30,7 @@ func main() {
 			for char := 'a'; char < 'a'+26; char++ {
 				fmt.Printf("%c ", char)
 			}
+			fmt.Println("\n")
 		}
 	}()
 
@@ -43,6 +44,7 @@ func main() {
 			for char := 'A'; char < 'A'+26; char++ {
 				fmt.Printf("%c ", char)
 			}
+			fmt.Println("\n")
 		}
 	}()
 
