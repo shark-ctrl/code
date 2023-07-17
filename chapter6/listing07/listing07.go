@@ -8,7 +8,7 @@ import (
 	"sync"
 )
 
-// main is the entry point for all Go programs.
+// 多个逻辑处理器分别配一个调度器，使得字母打印交替执行
 func main() {
 	// Allocate two logical processors for the scheduler to use.
 	runtime.GOMAXPROCS(2)
@@ -30,6 +30,7 @@ func main() {
 			for char := 'a'; char < 'a'+26; char++ {
 				fmt.Printf("%c ", char)
 			}
+			fmt.Printf("\n")
 		}
 	}()
 
@@ -43,6 +44,7 @@ func main() {
 			for char := 'A'; char < 'A'+26; char++ {
 				fmt.Printf("%c ", char)
 			}
+			fmt.Printf("\n")
 		}
 	}()
 
