@@ -1,4 +1,4 @@
-// Package search : search.go manages the searching of results
+// Package search : search.go.bak manages the searching of results
 // against Google, Yahoo and Bing.
 package search
 

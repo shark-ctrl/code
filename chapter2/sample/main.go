@@ -5,7 +5,6 @@ import (
 	"os"
 	//没有用到的包可以直接用下划线注释一下
 	_ "./matchers"
-	"./search"
 )
 
 /*
@@ -21,5 +20,5 @@ func main() {
 	var searchItem = "pulled"
 	log.Println("匹配器开始工作，匹配关键字", searchItem)
 	//爬取带有pulled1的内容
-	search.Run(searchItem)
+	//search.Run(searchItem)
 }
