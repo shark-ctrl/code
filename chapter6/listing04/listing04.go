@@ -1,5 +1,3 @@
-// This sample program demonstrates how the goroutine scheduler
-// will time slice goroutines on a single thread.
 package main
 
 import (
@@ -8,42 +6,40 @@ import (
 	"sync"
 )
 
-// wg is used to wait for the program to finish.
 var wg sync.WaitGroup
 
-// main is the entry point for all Go programs.
+// 单核情况下长时间执行的协程会被调度器轮流分配
 func main() {
-	// Allocate 1 logical processors for the scheduler to use.
+	//给调度器分配一个处理器
 	runtime.GOMAXPROCS(1)
 
-	// Add a count of two, one for each goroutine.
+	//初始化计数器
 	wg.Add(2)
 
-	// Create two goroutines.
-	fmt.Println("Create Goroutines")
+	fmt.Println("两个协程开始工作")
+
 	go printPrime("A")
 	go printPrime("B")
 
-	// Wait for the goroutines to finish.
-	fmt.Println("Waiting To Finish")
+	fmt.Println("等待两个协程执行完成")
 	wg.Wait()
 
-	fmt.Println("Terminating Program")
+	fmt.Println("两个协程执行结束")
+
 }
 
-// printPrime displays prime numbers for the first 5000 numbers.
 func printPrime(prefix string) {
-	// Schedule the call to Done to tell main we are done.
 	defer wg.Done()
-
 next:
-	for outer := 2; outer < 5000; outer++ {
+	for outer := 0; outer < 5000; outer++ {
+		//除了2和本身以外还能被整数的就不是质数
 		for inner := 2; inner < outer; inner++ {
 			if outer%inner == 0 {
 				continue next
 			}
 		}
+		//打印协程号和质数
 		fmt.Printf("%s:%d\n", prefix, outer)
 	}
-	fmt.Println("Completed", prefix)
+
 }
