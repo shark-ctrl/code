@@ -8,20 +8,5 @@
     "site" : "npr",
     "link" : "http://www.npr.org/rss/rss.php?id=1008",
     "type" : "rss"
-  },
-  {
-    "site" : "npr",
-    "link" : "http://www.npr.org/rss/rss.php?id=1006",
-    "type" : "rss"
-  },
-  {
-    "site" : "npr",
-    "link" : "http://www.npr.org/rss/rss.php?id=1007",
-    "type" : "rss"
-  },
-  {
-    "site" : "npr",
-    "link" : "http://www.npr.org/rss/rss.php?id=1057",
-    "type" : "rss"
   }
 ]
