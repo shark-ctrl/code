@@ -1,64 +1,43 @@
-// This sample program demonstrates how to use a mutex
-// to define critical sections of code that need synchronous
-// access.
 package main
 
 import (
 	"fmt"
-	"runtime"
 	"sync"
 )
 
 var (
-	// counter is a variable incremented by all goroutines.
-	counter int
-
-	// wg is used to wait for the program to finish.
+	counter int64
+	//计数器，可以理解为Java的countdownLactch
 	wg sync.WaitGroup
-
-	// mutex is used to define a critical section of code.
+	//互斥锁
 	mutex sync.Mutex
 )
 
-// main is the entry point for all Go programs.
 func main() {
-	// Add a count of two, one for each goroutine.
+	fmt.Println("main方法开始工作")
+
 	wg.Add(2)
 
-	// Create two goroutines.
 	go incCounter(1)
 	go incCounter(2)
 
-	// Wait for the goroutines to finish.
+	fmt.Println("等待两个协程结束........")
 	wg.Wait()
-	fmt.Printf("Final Counter: %d\n", counter)
+	fmt.Println("协程运行结束，counter:", counter)
 }
 
-// incCounter increments the package level Counter variable
-// using the Mutex to synchronize and provide safe access.
 func incCounter(id int) {
-	// Schedule the call to Done to tell main we are done.
 	defer wg.Done()
-
-	for count := 0; count < 2; count++ {
-		// Only allow one goroutine through this
-		// critical section at a time.
+	fmt.Println("协程", id, "开始工作")
+	for i := 0; i < 2; i++ {
 		mutex.Lock()
 		{
-			// Capture the value of counter.
 			value := counter
-
-			// Yield the thread and be placed back in queue.
-			runtime.Gosched()
-
-			// Increment our local value of counter.
 			value++
-
-			// Store the value back into counter.
 			counter = value
+			fmt.Println("协程", id, "上锁成功并修改值成功，counter:", value)
 		}
 		mutex.Unlock()
-		// Release the lock and allow any
-		// waiting goroutine through.
 	}
+
 }
