@@ -1,77 +1,57 @@
-// This sample program demonstrates how to use a buffered
-// channel to work on multiple tasks with a predefined number
-// of goroutines.
 package main
 
 import (
 	"fmt"
-	"math/rand"
 	"sync"
 	"time"
 )
 
 const (
-	numberGoroutines = 4  // Number of goroutines to use.
-	taskLoad         = 10 // Amount of work to process.
+	numberGoroutines = 4  //协程数设置为4
+	taskLoad         = 10 //任务数为10
 )
 
-// wg is used to wait for the program to finish.
 var wg sync.WaitGroup
 
-// init is called to initialize the package by the
-// Go runtime prior to any other code being executed.
-func init() {
-	// Seed the random number generator.
-	rand.Seed(time.Now().Unix())
-}
-
-// main is the entry point for all Go programs.
 func main() {
-	// Create a buffered channel to manage the task load.
-	tasks := make(chan string, taskLoad)
 
-	// Launch goroutines to handle the work.
-	wg.Add(numberGoroutines)
-	for gr := 1; gr <= numberGoroutines; gr++ {
-		go worker(tasks, gr)
+	wg.Add(4)
+
+	//创建一个有缓冲通道
+	taskChannel := make(chan string, taskLoad)
+
+	for i := 0; i < numberGoroutines; i++ {
+		go Worker(i, taskChannel)
 	}
 
-	// Add a bunch of work to get done.
-	for post := 1; post <= taskLoad; post++ {
-		tasks <- fmt.Sprintf("Task : %d", post)
+	//往通道里提交任务
+	for i := 0; i < taskLoad; i++ {
+		taskChannel <- fmt.Sprintf("task %d", i)
 	}
 
-	// Close the channel so the goroutines will quit
-	// when all the work is done.
-	close(tasks)
+	//关闭通道
+	close(taskChannel)
 
-	// Wait for all the work to get done.
+	//等待4个协程执行完成
 	wg.Wait()
+
 }
 
-// worker is launched as a goroutine to process work from
-// the buffered channel.
-func worker(tasks chan string, worker int) {
-	// Report that we just returned.
+func Worker(workNo int, taskChannel chan string) {
+	//函数退出时扣减计数器
 	defer wg.Done()
 
 	for {
-		// Wait for work to be assigned.
-		task, ok := <-tasks
+		task, ok := <-taskChannel
+
 		if !ok {
-			// This means the channel is empty and closed.
-			fmt.Printf("Worker: %d : Shutting Down\n", worker)
+			fmt.Println("任务通道已关闭,worker", workNo, "退出")
 			return
 		}
 
-		// Display we are starting the work.
-		fmt.Printf("Worker: %d : Started %s\n", worker, task)
+		fmt.Println("worker", workNo, "执行任务", task)
 
-		// Randomly wait to simulate work time.
-		sleep := rand.Int63n(100)
-		time.Sleep(time.Duration(sleep) * time.Millisecond)
-
-		// Display we finished the work.
-		fmt.Printf("Worker: %d : Completed %s\n", worker, task)
+		time.Sleep(2000 * time.Millisecond)
 	}
+
 }
