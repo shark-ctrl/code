@@ -20,11 +20,12 @@ func main() {
 	//创建一个有缓冲通道
 	taskChannel := make(chan string, taskLoad)
 
+	//启动4个协程模拟消费者
 	for i := 0; i < numberGoroutines; i++ {
 		go Worker(i, taskChannel)
 	}
 
-	//往通道里提交任务
+	//主线程往通道里提交10个任务
 	for i := 0; i < taskLoad; i++ {
 		taskChannel <- fmt.Sprintf("task %d", i)
 	}
@@ -44,11 +45,13 @@ func Worker(workNo int, taskChannel chan string) {
 	for {
 		task, ok := <-taskChannel
 
+		//如果通道关闭则退出
 		if !ok {
 			fmt.Println("任务通道已关闭,worker", workNo, "退出")
 			return
 		}
 
+		//输出通道收到的值，然后休眠2s
 		fmt.Println("worker", workNo, "执行任务", task)
 
 		time.Sleep(2000 * time.Millisecond)

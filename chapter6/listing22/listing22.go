@@ -15,11 +15,16 @@ func main() {
 
 	baton := make(chan int)
 
+	//启动协程1模拟第一个起跑运动员
 	go Runner(baton)
 
 	fmt.Println("接力赛开始.......")
+	//向通道发送数据，模拟开枪通知第1棒起跑
 	baton <- 1
+
+	//等待第4个协程wg.Done()
 	wg.Wait()
+	//关闭通道
 	close(baton)
 	fmt.Println("接力赛结束")
 
